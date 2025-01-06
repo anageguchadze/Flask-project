@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.secret_key = 'yout secret key'
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///students.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///users.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -50,4 +50,17 @@ def login():
             flash('login is successfully!')
             return redirect(url_for('home'))
         else:
-            flash()
+            flash('Invalid username or password!')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
